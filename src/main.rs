@@ -53,3 +53,40 @@ async fn main() {
         .await
         .unwrap();
 }
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+struct Response {
+    status: String,
+    msg: String,
+}
+#[debug_handler]
+async fn sync_point(Path(id): Path<String>, Extension(state): Extension<State>) -> impl IntoResponse {
+    // Check if the second party is already waiting
+    let notify = {
+        let mut state = state.lock().unwrap();
+        if let Some(notify) = state.remove(&id) {
+            notify.notify_one();
+            
+            return Json(Response {
+                status: "ok".to_string(),
+                msg: "Second party arrived".into(),
+            });
+        } else {
+            let notify = Arc::new(Notify::new());
+            state.insert(id, notify.clone());
+            notify
+        }
+    };
+
+    if timeout(Duration::from_secs(10), notify.notified()).await.is_ok(){
+        return Json(Response {
+            status: "ok".to_string(),
+            msg: "Second party arrived".into(),
+        });
+    } else {
+        return Json(Response {
+            status: "error".to_string(),
+            msg: "Timeout".into(),
+        });
+    }
+}
