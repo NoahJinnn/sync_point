@@ -1,0 +1,19 @@
+[package]
+name = "sync_point"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+failure = "0.1.6"
+serde = { version = "1.0", features = ["derive", "rc"] }
+serde_json = "1.0.64"
+axum = "0.6.18"
+axum-macros = "0.3.7"
+tokio = { version = "1.0", features = ["full"] }
+tower = { version = "0.4", features = ["util", "timeout"] }
+tower-http = { version = "0.4.0", features = ["add-extension", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+lazy_static = "1.4.0"
