@@ -10,6 +10,6 @@ cargo run
 
 ```sh
 ### test is the id of sender
-curl --location 'http://localhost:3000/wait-for-second-party/test' \
+curl --location 'http://localhost:8080/wait-for-second-party/test' \
 --header 'Content-Type: application/json'
 ```
